@@ -1,0 +1,45 @@
+{% extends "nav.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>Subjects</h2>
+        <ul class="list-group">
+            {% for subject in subjects %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ subject.title }}
+                    <a href="{% url 'app:play_subject' subject.id %}" class="btn btn-primary">Play</a>
+                    <form method="post" action="{% url 'app:delete' subject.id 'subject' %}" class="d-flex">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">delete</button>
+                    </form>
+                </li>
+
+            {% endfor %}
+        </ul>
+<br>
+<br>
+        <h2>Sentences</h2>
+        <ul class="list-group">
+            {% for d in data %}
+                <li class="list-group-item">
+                    {{ d.text }} -
+                    {% if d.subject %}
+                        {{ d.subject }}
+                    {% else %}
+                        <form method="post" action="{% url 'app:index_add' d.id  %}" class="d-flex">
+                            {% csrf_token %}
+                            <div class="form-group flex-grow-1">
+                                {{ subject_form.title }}
+                            </div>
+                            <button type="submit" class="btn btn-success">Add Subject</button>
+                        </form>
+                    {% endif %}
+                    <form method="post" action="{% url 'app:delete' d.id 'sentence' %}" class="d-flex">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

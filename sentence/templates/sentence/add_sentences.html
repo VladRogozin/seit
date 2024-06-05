@@ -1,0 +1,41 @@
+{% extends "nav.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Upload Audio</h1>
+        <form method="post" enctype="multipart/form-data" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_text" class="form-label">Text</label>
+                <input type="text" name="text" class="form-control" id="id_text">
+            </div>
+            <div class="mb-3">
+                <label for="id_text_translate" class="form-label">Text Translation</label>
+                <input type="text" name="text_translate" class="form-control" id="id_text_translate">
+            </div>
+            <div class="mb-3">
+                <label for="id_audio" class="form-label">Audio File</label>
+                <input type="file" name="audio" class="form-control" id="id_audio">
+            </div>
+            <div class="mb-3">
+                <label for="id_subject" class="form-label">Subject</label>
+                <select name="subject" class="form-select" id="id_subject">
+                    {% for subject in sentence_form.fields.subject.queryset %}
+                        <option value="{{ subject.pk }}">{{ subject.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+
+        <h1>Upload Subject</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_title" class="form-label">Title</label>
+                <input type="text" name="title" class="form-control" id="id_title">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload Subject</button>
+        </form>
+    </div>
+{% endblock %}
