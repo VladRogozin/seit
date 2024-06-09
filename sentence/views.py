@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SentenceAddForm, SubjectAddForm
 from .models import Sentence, Subject
 from django.core.serializers import serialize
@@ -48,6 +48,19 @@ def add_sentences(request):
     return render(request, 'sentence/add_sentences.html', {'sentence_form': sentence_form,'subject_form': subject_form, })
 
 
+def edit_sentence(request, sentence_id):
+    sentence = get_object_or_404(Sentence, id=sentence_id)
+
+    if request.method == 'POST':
+        sentence_form = SentenceAddForm(request.POST, request.FILES, instance=sentence)
+        if sentence_form.is_valid():
+            sentence_form.save()
+            return HttpResponseRedirect('/sentences/')  # перенаправление после сохранения
+    else:
+        sentence_form = SentenceAddForm(instance=sentence)
+
+    return render(request, 'sentence/edit_sentence.html', {'sentence_form': sentence_form, 'sentence': sentence})
+
 def delete(request, id_obj, obj):
     if obj == 'sentence':
         sentence = Sentence.objects.get(id=id_obj)
@@ -58,4 +71,3 @@ def delete(request, id_obj, obj):
         subject.delete()
 
     return redirect('app:index')
-

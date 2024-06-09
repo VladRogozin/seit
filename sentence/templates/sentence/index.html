@@ -8,16 +8,15 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{ subject.title }}
                     <a href="{% url 'app:play_subject' subject.id %}" class="btn btn-primary">Play</a>
-                    <form method="post" action="{% url 'app:delete' subject.id 'subject' %}" class="d-flex">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success">delete</button>
+                    <form method="post" action="{% url 'app:delete' subject.id 'subject' %}" class="d-flex delete-form">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-success deleteButton">delete</button>
                     </form>
                 </li>
-
             {% endfor %}
         </ul>
-<br>
-<br>
+        <br>
+        <br>
         <h2>Sentences (hello world)</h2>
         <ul class="list-group">
             {% for d in data %}
@@ -34,12 +33,60 @@
                             <button type="submit" class="btn btn-success">Add Subject</button>
                         </form>
                     {% endif %}
-                    <form method="post" action="{% url 'app:delete' d.id 'sentence' %}" class="d-flex">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success">delete</button>
+                    <form method="post" action="{% url 'app:delete' d.id 'sentence' %}" class="d-flex delete-form">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-success deleteButton">delete</button>
                     </form>
+                    <a href="{% url 'app:edit_sentence' d.id %}" class="btn btn-primary">Edit</a>
                 </li>
             {% endfor %}
         </ul>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Подтверждение действия</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Вы уверены, что хотите продолжить?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+                    <button type="button" class="btn btn-primary" id="confirmButton">Да</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        var formToSubmit;
+
+        document.querySelectorAll('.deleteButton').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                formToSubmit = this.closest('form');
+                $('#confirmationModal').modal('show');
+            });
+        });
+
+        document.getElementById('confirmButton').addEventListener('click', function() {
+            $('#confirmationModal').modal('hide');
+            if (formToSubmit) {
+                formToSubmit.submit();
+            }
+        });
+
+        document.querySelector('.btn-secondary[data-dismiss="modal"]').addEventListener('click', function() {
+            $('#confirmationModal').modal('hide');
+        });
+    </script>
 {% endblock %}
