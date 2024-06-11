@@ -2,45 +2,54 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h2>Subjects</h2>
+        <h2 style="color: #ede3e0;">Subjects</h2>
         <ul class="list-group">
             {% for subject in subjects %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
+                <li class="list-group-item d-flex justify-content-between align-items-center mt-1" style="color: #00457E; background-color: #ede3e0">
                     {{ subject.title }}
-                    <a href="{% url 'app:play_subject' subject.id %}" class="btn btn-primary">Play</a>
+                    <a href="{% url 'app:play_subject' subject.id %}" class="btn btn-primary" >Play</a>
                     <form method="post" action="{% url 'app:delete' subject.id 'subject' %}" class="d-flex delete-form">
                         {% csrf_token %}
-                        <button type="button" class="btn btn-success deleteButton">delete</button>
+                        <button type="button" class="btn btn-danger me-2 deleteButton">delete</button>
                     </form>
                 </li>
             {% endfor %}
         </ul>
         <br>
         <br>
-        <h2>Sentences (hello world)</h2>
+        <h2 style="color: #ede3e0;">Sentences </h2>
         <ul class="list-group">
             {% for d in data %}
-                <li class="list-group-item">
-                    {{ d.text }} -
-                    {% if d.subject %}
-                        {{ d.subject }}
-                    {% else %}
-                        <form method="post" action="{% url 'app:index_add' d.id  %}" class="d-flex">
-                            {% csrf_token %}
-                            <div class="form-group flex-grow-1">
-                                {{ subject_form.title }}
-                            </div>
-                            <button type="submit" class="btn btn-success">Add Subject</button>
-                        </form>
-                    {% endif %}
-                    <form method="post" action="{% url 'app:delete' d.id 'sentence' %}" class="d-flex delete-form">
-                        {% csrf_token %}
-                        <button type="button" class="btn btn-success deleteButton">delete</button>
-                    </form>
-                    <a href="{% url 'app:edit_sentence' d.id %}" class="btn btn-primary">Edit</a>
+
+                <li class="list-group-item mt-1" style="color: #00457E; background-color: #ede3e0;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            {{ d.text }} -
+                            {% if d.subject %}
+                                {{ d.subject }}
+                            {% else %}
+                                <form method="post" action="{% url 'app:index_add' d.id  %}" class="d-flex align-items-center" >
+                                    {% csrf_token %}
+                                    <div class="form-group flex-grow-1">
+                                        {{ subject_form.title }}
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Add Subject</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <form method="post" action="{% url 'app:delete' d.id 'sentence' %}" class="d-flex align-items-center">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger me-2">Delete</button>
+                            </form>
+                            <a href="{% url 'app:edit_sentence' d.id %}" class="btn btn-primary mt-1">Edit</a>
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
+
+
     </div>
 
     <!-- Modal -->

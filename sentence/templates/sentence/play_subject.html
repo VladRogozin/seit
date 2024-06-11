@@ -1,96 +1,37 @@
 {% extends "nav.html" %}
 
 {% block content %}
-    <div class="container mt-5">
-        <!-- Поле для предложения -->
-        <p id="sentence" class="lead mb-4" style="display: none;"></p>
+<div class="container mt-5">
+    <!-- Поле для предложения -->
+    <p id="sentence" class="lead mb-4" style="display: none;"></p>
+    <h2 id="count_page" class="lead mb-4 text-center" style="color: #ede3e0;"></h2>
 
-        <!-- Форма для ввода текста -->
-        <form id="myForm" class="mb-4">
-            <div class="input-group">
-                <input type="text" id="user_input" name="user_input" class="form-control" placeholder="Enter text here">
-                <button type="button" onclick="checking()" class="btn btn-primary">Check</button>
-            </div>
-        </form>
-
-        <!-- Аудиоплеер -->
-        <audio id="audioPlayer" class="mb-3" type="audio/mpeg"></audio>
-
-        <!-- Кнопки управления -->
-        <div class="mb-4">
-            <button onclick="audioPlay()" class="btn btn-primary me-2">Play</button>
-            <button onclick="nextSentence()" class="btn btn-secondary">Next</button>
-            <button onclick="showTranslate()" class="btn btn-secondary">Translate</button>
-            <button onclick="showOriginText()" class="btn btn-secondary">Hint</button>
+    <!-- Форма для ввода текста -->
+    <form id="myForm" class="mb-4">
+        <div class="input-group">
+            <input type="text" id="user_input" name="user_input" class="form-control" placeholder="Enter text here">
+            <button type="button" onclick="clearInput()" class="btn btn-danger">X</button>
+            <button type="button" onclick="checking()" class="btn btn-primary">Check</button>
         </div>
+    </form>
 
-        <!-- Ответ -->
-        <p id="answer" class="alert alert-danger  text-uppercase fs-3" role="alert"></p>
-        <p id="origin_text" style="display: none;" class="alert alert-primary text-uppercase fs-3" role="alert"></p>
-        <p id="translate" style="display: none;" class="alert alert-info  text-uppercase fs-3" role="alert"></p>
+    <!-- Аудиоплеер -->
+    <audio id="audioPlayer" class="mb-3" type="audio/mpeg"></audio>
 
+    <!-- Кнопки управления -->
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4">
+        <button onclick="audioPlay()" class="btn btn-primary me-md-2 mb-2">Play</button>
+        <button onclick="nextSentence()" class="btn btn-secondary me-md-2 mb-2">Next</button>
+        <button onclick="showTranslate()" class="btn btn-secondary me-md-2 mb-2">Translate</button>
+        <button onclick="showOriginText()" class="btn btn-secondary me-md-2 mb-2">Hint</button>
     </div>
 
+    <!-- Ответ -->
+    <p id="answer" class="alert alert-danger text-uppercase fs-3" role="alert"></p>
+    <p id="origin_text" style="display: none;" class="alert alert-primary text-uppercase fs-3" role="alert"></p>
+    <p id="translate" style="display: none;" class="alert alert-info text-uppercase fs-3" role="alert"></p>
+</div>
+
 <div id="data-all" data-all="{{ sentence_json|escape }}"></div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        nextSentence();
-    });
 
-    let sentenceElement  = document.getElementById('sentence');
-    let audio = document.getElementById('audioPlayer');
-    let translateText = document.getElementById('translate');
-    let originText = document.getElementById('origin_text');
-
-
-    let answer = document.getElementById('answer');
-    const dataAll = JSON.parse(document.getElementById('data-all').getAttribute('data-all'));
-    console.log(dataAll)
-
-    let dataAllCopy = dataAll.slice();
-    let globalRandomIndex = 0;
-
-
-    function nextSentence() {
-        translateText.style.display = 'none';
-        originText.style.display = 'none';
-
-        if (dataAllCopy.length === 0) {
-            sentenceElement.innerText = 'Done';
-        } else {
-            let randomIndex = Math.floor(Math.random() * dataAllCopy.length);
-            globalRandomIndex = randomIndex;
-            let sentence = dataAllCopy[randomIndex];
-            sentenceElement.innerText = sentence.fields.text;
-            audio.src = "/media/" + sentence.fields.audio;
-            translateText.innerText = sentence.fields.text_translate;
-            originText.innerText = sentence.fields.text;
-
-            dataAllCopy.splice(randomIndex, 1);
-            answer.innerText = '';
-        }
-    };
-
-
-
-    function audioPlay() {
-        audio.play();
-    };
-
-    function checking() {
-       let textOrigin = sentenceElement.innerText;
-       let userInput = document.getElementById('user_input').value;
-        if (textOrigin.trim().toLowerCase() === userInput.trim().toLowerCase()){
-            answer.innerText = 'reit' ;
-        }
-    };
-
-    function showTranslate() {
-        translateText.style.display = 'block';
-    }
-
-    function showOriginText() {
-        originText.style.display = 'block';
-    }
-</script>
 {% endblock %}

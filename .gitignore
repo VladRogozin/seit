@@ -4,6 +4,6 @@
 *.pyc
 __pycache__/
 local_settings.py
-/static/
+#/static/
 media/audio/
 db.sqlite3
